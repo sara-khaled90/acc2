@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record
+			id="view_account_payment_form_extends_add_internal_payment_transfer_options"
+			model="ir.ui.view">
+			<field name="name">view_account_payment_form_extends_add_internal_payment_transfer_options
+			</field>
+			<field name="model">account.payment</field>
+			<field name="inherit_id"
+				ref="account.view_account_payment_form" />
+			<field name="arch" type="xml">
+				<field name='payment_type' position="after">
+					<field name="internal_payment_transfer_type"
+						attrs="{'invisible':[('payment_type','!=','transfer')],'required':[('payment_type','=','transfer')]}" />
+
+					<field name="from_account_id"
+						attrs="{'invisible': ['|',('payment_type','!=','transfer'),('internal_payment_transfer_type','not in',['account_to_account','account_to_journal'])], 'required' :[('payment_type','=','transfer'),('internal_payment_transfer_type','in',['account_to_account','account_to_journal'])]}" />
+
+					<field name="from_journal_id"
+						attrs="{'invisible': ['|',('payment_type','!=','transfer'),('internal_payment_transfer_type','!=','journal_to_account')], 'required' :[('payment_type','=','transfer'),('internal_payment_transfer_type','=','journal_to_account')] }" />
+
+					<field name="to_account_id"
+						attrs="{'invisible': ['|',('payment_type','!=','transfer'),('internal_payment_transfer_type','not in',['account_to_account','journal_to_account'])], 'required' : [('payment_type','=','transfer'),('internal_payment_transfer_type','in',['account_to_account','journal_to_account'])]}" />
+
+					<field name="to_journal_id"
+						attrs="{'invisible': ['|',('payment_type','!=','transfer'),('internal_payment_transfer_type','!=','account_to_journal')], 'required' :[('payment_type','=','transfer'),('internal_payment_transfer_type','=','account_to_journal')]}" />
+				</field>
+
+				<field name='destination_journal_id' position="attributes">
+					<attribute name="attrs">{'invisible': ['|',('payment_type', '!=',
+						'transfer'),('internal_payment_transfer_type','!=','journal_to_journal')],
+						'required': [('payment_type', '=',
+						'transfer'),('internal_payment_transfer_type','=','journal_to_journal')],'readonly':
+						[('state', '!=', 'draft')]}</attribute>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</odoo>
